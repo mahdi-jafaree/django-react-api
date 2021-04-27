@@ -1,24 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 
 function App() {
+  const [posts, setPosts] = useState<{ title: string, content: string }[]>([])
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/', { headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' } })
+      .then((res) => res.json())
+      .then((data) => { setPosts(data) })
+      .catch(err => console.log(err))
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ height: '80%' }}>
+      {posts.map((post, index) => <p key={index}>{post.title} || {post.content}</p>)}
     </div>
   );
 }
